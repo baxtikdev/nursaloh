@@ -48,10 +48,10 @@ class Brand(BaseModel):
 class Category(BaseModel):
     title = models.CharField(max_length=255)
     photo = models.ImageField(_("Image of Category"), upload_to='categoryImage', null=True, blank=True)
-    photo_medium = ImageSpecField(source='photo', processors=[ResizeToFill(500, 500)], format='PNG',
-                                  options={'quality': 90})
     photo_small = ImageSpecField(source='photo', processors=[ResizeToFill(200, 200)], format='PNG',
                                  options={'quality': 90})
+    photo_medium = ImageSpecField(source='photo', processors=[ResizeToFill(500, 500)], format='PNG',
+                                  options={'quality': 90})
 
     def __str__(self):
         return self.title
@@ -78,8 +78,6 @@ class Product(BaseModel):
     brand = models.ForeignKey(Brand, related_name="brandProduct", on_delete=models.SET_NULL, null=True, blank=True)
     size = models.CharField(max_length=30, null=True, blank=True)
     manufacturer = models.CharField(max_length=20, null=True, blank=True)
-
-    photo = models.ImageField(_("Image of Product"), upload_to='productImage', null=True, blank=True)
     quantity = models.IntegerField(default=0)
     discount = models.FloatField(default=0)
     isTop = models.BooleanField(_("Is Top"), default=False)
@@ -95,7 +93,7 @@ class Product(BaseModel):
 
 
 class ProductImage(BaseModel):
-    product = models.ForeignKey(Product, related_name='productImages', on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, related_name='productProductImage', on_delete=models.CASCADE)
     photo = models.ImageField(_("Image of Product"), upload_to='productImage', null=True, blank=True)
     photo_medium = ImageSpecField(source='photo', processors=[ResizeToFill(500, 500)], format='PNG',
                                   options={'quality': 90})
