@@ -1,4 +1,3 @@
-from ckeditor.fields import RichTextField
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -70,7 +69,7 @@ class Product(BaseModel):
                                     null=True, blank=True)
     code = models.CharField(max_length=50)
     title = models.CharField(max_length=250, null=True, blank=True)
-    description = RichTextField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
     price = models.FloatField(default=0)
     discountPrice = models.FloatField(null=True, blank=True)
     material = models.CharField(max_length=100, null=True, blank=True)

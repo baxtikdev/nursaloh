@@ -86,7 +86,7 @@ THIRD_PARTY_APPS = [
 
     "django_filters",
     'imagekit',
-    'drf_base64',
+    'drf_base64'
 ]
 
 LOCAL_APPS = [
