@@ -1,10 +1,10 @@
 version: '3'
 
 volumes:
-  production_postgres_data: {}
-  production_postgres_data_backups: {}
-  production_traefik: {}
-  production_django_media: {}
+  production_postgres_data: { }
+  production_postgres_data_backups: { }
+  production_traefik: { }
+  production_django_media: { }
 
 services:
   django: &django
@@ -14,8 +14,8 @@ services:
 
     image: project_production_django
     volumes:
-      - /var/www/api.example.com/media:/app/media
-      - /var/www/api.example.com/static:/app/static
+      - /var/www/api.nursaloh.uz/media:/app/media
+      - /var/www/api.nursaloh.uz/static:/app/static
     depends_on:
       - postgres
       - redis
