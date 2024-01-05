@@ -1,4 +1,5 @@
 from django.db.models import Prefetch, Count
+from drf_spectacular.utils import extend_schema
 from rest_framework.filters import OrderingFilter
 from rest_framework.viewsets import ModelViewSet
 
@@ -9,6 +10,7 @@ from api.utils.serializer import CategoryCreateSerializer, SubCategoryCreateSeri
 from common.product.models import Category, SubCategory, Brand, Uom
 
 
+@extend_schema(tags=["Category"])
 class CategoryAPIView(ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategoryCreateSerializer
@@ -37,6 +39,7 @@ class CategoryAPIView(ModelViewSet):
         return super().retrieve(request, *args)
 
 
+@extend_schema(tags=["SubCategory"])
 class SubCategoryAPIView(ModelViewSet):
     queryset = SubCategory.objects.select_related('category').all()
     serializer_class = SubCategoryCreateSerializer
@@ -52,6 +55,7 @@ class SubCategoryAPIView(ModelViewSet):
         return super().retrieve(request, *args)
 
 
+@extend_schema(tags=["Brand"])
 class BrandAPIView(ModelViewSet):
     queryset = Brand.objects.all()
     serializer_class = BrandCreateSerializer
@@ -59,6 +63,7 @@ class BrandAPIView(ModelViewSet):
     lookup_field = 'guid'
 
 
+@extend_schema(tags=["Uom"])
 class UomAPIView(ModelViewSet):
     queryset = Uom.objects.all()
     serializer_class = UomCreateSerializer

@@ -30,7 +30,7 @@ class PaymentTypes(models.IntegerChoices):
 class OrderProduct(BaseModel):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.FloatField()
-    orderPrice = models.FloatField()
+    orderPrice = models.DecimalField(max_digits=50, decimal_places=2, default=0)
     discount = models.FloatField(default=0)
 
     def __str__(self):
@@ -58,7 +58,7 @@ class Order(BaseModel):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         if self.code is None:
-            self.code = '#' + str(self.id + (10 ** 6))
+            self.code = 'P' + str(self.id + (10 ** 4))
             self.save()
 
     def __str__(self):

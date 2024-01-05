@@ -1,4 +1,5 @@
 from django.db.models import Prefetch
+from drf_spectacular.utils import extend_schema
 from rest_framework.filters import OrderingFilter
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
@@ -9,11 +10,13 @@ from api.product.serializer import ProductCreateSerializer, ProductListSerialize
 from common.product.models import Product, ProductImage
 
 
+@extend_schema(tags=["Product"])
 class ProductAPIView(ModelViewSet):
     queryset = Product.objects.select_related('subcategory', 'subcategory__category', 'brand', 'uom').all()
     serializer_class = ProductCreateSerializer
     pagination_class = CustomPagination
     filter_backends = [ProductFilter, OrderingFilter]
+    ordering_fields = ['created_at']
     lookup_field = 'guid'
 
     def list(self, request, *args, **kwargs):

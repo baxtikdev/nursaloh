@@ -87,6 +87,10 @@ class Product(BaseModel):
     class Meta(BaseMeta):
         pass
 
+    @property
+    def with_discount(self):
+        return self.price * (1-1/self.discount)
+
     def __str__(self):
         return self.title
 
