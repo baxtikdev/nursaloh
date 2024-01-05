@@ -14,8 +14,8 @@ services:
 
     image: project_production_django
     volumes:
-      - /var/www/api.nursaloh.uz/media:/app/media
-      - /var/www/api.nursaloh.uz/static:/app/static
+      - /var/www/api.nursaloh.uz/media:/app/project/media
+      - /var/www/api.nursaloh.uz/static:/app/project/static
     depends_on:
       - postgres
       - redis
