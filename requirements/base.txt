@@ -36,3 +36,9 @@ django-celery-results==2.5.1
 
 # BASE64
 drf_base64==2.0
+
+# READ EXCEL FILE
+tablib[xlsx]==3.5.0
+
+# ADMIN
+django-jazzmin==2.6.0

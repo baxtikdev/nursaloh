@@ -67,11 +67,10 @@ class SubCategory(BaseModel):
 class Product(BaseModel):
     subcategory = models.ForeignKey(SubCategory, related_name="subcategoryProducts", on_delete=models.SET_NULL,
                                     null=True, blank=True)
-    code = models.CharField(max_length=50)
+    code = models.CharField(max_length=100, unique=True)
     title = models.CharField(max_length=250, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
-    price = models.FloatField(default=0)
-    discountPrice = models.FloatField(null=True, blank=True)
+    price = models.DecimalField(max_digits=50, decimal_places=3)
     material = models.CharField(max_length=100, null=True, blank=True)
     uom = models.ForeignKey(Uom, related_name="uomProduct", on_delete=models.SET_NULL, null=True, blank=True)
     brand = models.ForeignKey(Brand, related_name="brandProduct", on_delete=models.SET_NULL, null=True, blank=True)
@@ -82,14 +81,14 @@ class Product(BaseModel):
     isTop = models.BooleanField(_("Is Top"), default=False)
     cornerStatus = models.ForeignKey(CornerStatus, related_name="cornerStatusProduct", on_delete=models.SET_NULL,
                                      null=True, blank=True)
-    status = models.IntegerField(choices=ProductStatus.choices, default=ProductStatus.DRAFT)
+    status = models.IntegerField(choices=ProductStatus.choices, default=ProductStatus.ACTIVE)
 
     class Meta(BaseMeta):
         pass
 
     @property
     def with_discount(self):
-        return self.price * (1-1/self.discount)
+        return self.price * (1 - 1 / self.discount)
 
     def __str__(self):
         return self.title
@@ -106,3 +105,10 @@ class ProductImage(BaseModel):
 
     def __str__(self):
         return self.product.title
+
+
+class File(BaseModel):
+    file = models.FileField(upload_to="files")
+
+    def __str__(self):
+        return f"#{self.id} File: {self.file.name}"

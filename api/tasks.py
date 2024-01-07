@@ -1,8 +1,12 @@
+import re
+
 from celery import shared_task
 from django.contrib.auth import get_user_model
+from tablib import Dataset
 
 from api.auth.send_sms_func import sent_sms_base
-from common.product.models import Product, Category, SubCategory
+from common.product.models import File, Product, Category, Uom
+from common.product.models import SubCategory
 from common.users.models import Code
 
 User = get_user_model()
@@ -25,70 +29,76 @@ def verified_user(guid):
 
 @shared_task(name='deleteProducts')
 def deleteProducts():
-    for i in Product.objects.all():
-        i.delete()
+    files = File.objects.all()
+    files.delete()
+    products = Product.objects.all()
+    products.delete()
 
 
-# @shared_task(name='updateProducts')
-# def updateProducts():
-#     products = get_products()
-#     newProducts = []
-#     updateProducts = []
-#     for product in products.get("Товары"):
-#         category_name = product.get("Категория")
-#         quantity = product.get("Остаток")
-#         code = product.get("Код")
-#         price = product.get("Цена")
-#         title = product.get("Наименование")
-#         unit = product.get("ЕдиницаИзмерения")
-#         brand = product.get("ТорговаяМарка")
-#         size = product.get("Размеры")
-#         description = product.get("Описание")
-#         manufacturer = product.get("Производитель")
-#         if category_name and code and price > 0 and quantity > 0 and title:
-#             category = SubCategory.objects.filter(title_ru=category_name).first()
-#             if category is None:
-#                 continue
-#
-#             pr = Product.objects.filter(code=code).first()
-#             if pr and pr.code == code and pr.quantity < quantity:
-#                 updateProducts.append(Product(
-#                     id=pr.id,
-#                     subcategory=category,
-#                     # title=title,
-#                     title_ru=title,
-#                     description_ru=description,
-#                     price=price,
-#                     # material_ru=material,
-#                     unit=unit,
-#                     brand=brand,
-#                     size=size,
-#                     manufacturer_ru=manufacturer,
-#                     quantity=quantity
-#                 ))
-#             elif pr is None:
-#                 newProducts.append(Product(
-#                     subcategory=category,
-#                     code=code,
-#                     # title=title,
-#                     title_ru=title,
-#                     description_ru=description,
-#                     price=price,
-#                     # material_ru=material,
-#                     unit=unit,
-#                     brand=brand,
-#                     size=size,
-#                     manufacturer_ru=manufacturer,
-#                     quantity=quantity
-#                 ))
-#     if newProducts:
-#         Product.objects.bulk_create(newProducts)
-#     if updateProducts:
-#         Product.objects.bulk_update(updateProducts,
-#                                     fields=['subcategory', 'title_ru', 'description_ru', 'price', 'unit', 'brand',
-#                                             'size',
-#                                             'manufacturer_ru', 'quantity'])
-#     return
+@shared_task(name='createProducts')
+def createProducts(file_id):
+    newProducts = []
+    updateProducts = []
+    file = File.objects.filter(id=file_id).first()
+    if file is None:
+        return {'error': "File does not exists"}
+    try:
+        dataset = Dataset()
+        imported_data = dataset.load(file.file.read(), format='xlsx')
+    except Exception as e:
+        file.delete()
+        return {'error': str(e)}
+    for data in imported_data:
+        # print(data)
+        # category, created = Category.objects.get_or_create(title=data[6], title_ru=data[7])
+        # if data[10] and data[11]:
+        #     t1 = data[10].strip()
+        #     t2 = data[11].strip()
+        #     top_category, created = Category.objects.get_or_create(title=t1, title_ru=t2)
+        try:
+            title = data[1]
+            code = data[2]
+            price = data[5]
+            quantity = data[8] or 0
+            uom = data[9] or None
+
+            if price:
+                price = str(price).replace(',', '')
+
+            if code is None or title is None or bool(re.search(r'[a-zA-Zа-яА-Я]', price)):
+                continue
+
+            product = Product.objects.filter(code=code).first()
+
+            if uom:
+                uom, created = Uom.objects.get_or_create(title=uom)
+
+            title = title.strip()
+            if product:
+                updateProducts.append(Product(
+                    id=product.id,
+                    code=product.code,
+                    title=title,
+                    price=price,
+                    quantity=quantity,
+                    uom=uom
+                ))
+            else:
+                newProducts.append(Product(
+                    code=code,
+                    title=title,
+                    price=price,
+                    quantity=quantity,
+                    uom=uom
+                ))
+        except Exception as e:
+            print(f"Error: {e}")
+            continue
+    if newProducts:
+        Product.objects.bulk_create(newProducts)
+    if updateProducts:
+        Product.objects.bulk_update(updateProducts, fields=['code', 'title', 'price', 'quantity', 'uom'])
+    return {"message": "Product has updated and created successfully"}
 
 
 categories = [
