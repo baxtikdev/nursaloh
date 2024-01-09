@@ -21,7 +21,7 @@ class SubCategoryWithNumberSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SubCategory
-        fields = ['id', 'guid', 'title']
+        fields = ['id', 'guid', 'title', 'categoryProductCount']
 
 
 class CategoryCreateSerializer(serializers.ModelSerializer):
