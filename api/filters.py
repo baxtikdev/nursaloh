@@ -8,12 +8,35 @@ from common.users.models import User
 class ProductFilter(filters.BaseFilterBackend):
     def filter_queryset(self, request, queryset, view):
         filters = {}
-        fields = ['subcategory', 'subcategory__category', 'uom', 'brand', 'cornerStatus']
+        fields = ['subcategory', 'uom', 'brand', 'cornerStatus']
 
         for field in fields:
             param_value = request.query_params.get(field)
             if param_value:
                 filters[f'{field}__exact'] = param_value
+        category = request.query_params.get('category')
+        if category:
+            filters['subcategory__category__id__in'] = category.split(',')
+
+        subcategory = request.query_params.get('subcategory')
+        if subcategory:
+            filters['subcategory__id__in'] = subcategory.split(',')
+
+        brand = request.query_params.get('brand')
+        if brand:
+            filters['brand__id__in'] = brand.split(',')
+
+        id = request.query_params.get('id')
+        if id:
+            filters['id__in'] = id.split(',')
+
+        startPrice = request.query_params.get('startPrice')
+        if startPrice:
+            filters['startPrice__gte'] = startPrice
+
+        toPrice = request.query_params.get('toPrice')
+        if toPrice:
+            filters['toPrice__lte'] = toPrice
 
         if request.query_params.get('isTop'):
             filters['isTop'] = True

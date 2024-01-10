@@ -17,11 +17,11 @@ class SubCategoryShortSerializer(serializers.ModelSerializer):
 
 
 class SubCategoryWithNumberSerializer(serializers.ModelSerializer):
-    categoryProductCount = serializers.IntegerField(default=0)
+    subcategoryProductCount = serializers.IntegerField(default=0)
 
     class Meta:
         model = SubCategory
-        fields = ['id', 'guid', 'title', 'categoryProductCount']
+        fields = ['id', 'guid', 'title', 'subcategoryProductCount']
 
 
 class CategoryCreateSerializer(serializers.ModelSerializer):
@@ -32,7 +32,8 @@ class CategoryCreateSerializer(serializers.ModelSerializer):
 
 class CategoryListSerializer(serializers.ModelSerializer):
     subcategories = SubCategoryWithNumberSerializer(many=True)
-    subcategoryProductCount = serializers.IntegerField(default=0)
+    subcategoryCount = serializers.IntegerField(default=0)
+    categoryProductCount = serializers.IntegerField(default=0)
     photo_small = serializers.SerializerMethodField()
 
     def get_photo_small(self, obj):
@@ -42,7 +43,7 @@ class CategoryListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ['id', 'guid', 'title', 'photo_small', 'subcategories', 'subcategoryProductCount']
+        fields = ['id', 'guid', 'title', 'photo_small', 'subcategories', 'subcategoryCount', 'categoryProductCount']
 
 
 class CategoryDetailSerializer(serializers.ModelSerializer):
