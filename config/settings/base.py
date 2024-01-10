@@ -353,6 +353,7 @@ REST_FRAMEWORK = {
 CORS_ORIGIN_ALLOW_ALL = True
 
 CSRF_TRUSTED_ORIGINS = [
+    'https://ecommerce.doppidev.uz'
     'https://nursaloh.doppidev.uz'
 ]
 
