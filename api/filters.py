@@ -8,7 +8,7 @@ from common.users.models import User
 class ProductFilter(filters.BaseFilterBackend):
     def filter_queryset(self, request, queryset, view):
         filters = {}
-        fields = ['subcategory', 'uom', 'brand', 'cornerStatus']
+        fields = ['uom', 'cornerStatus']
 
         for field in fields:
             param_value = request.query_params.get(field)
