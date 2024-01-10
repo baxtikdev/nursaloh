@@ -23,30 +23,6 @@ class ProductFilter(filters.BaseFilterBackend):
 
         queryset = queryset.filter(**filters)
 
-        category = request.query_params.get('category')
-        if category:
-            queryset = queryset.filter(subcategory__category_id__in=category.split(','))
-
-        subcategory = request.query_params.get('subcategory')
-        if subcategory:
-            queryset = queryset.filter(subcategory_id__in=subcategory.split(','))
-
-        brand = request.query_params.get('brand')
-        if brand:
-            queryset = queryset.filter(brand__id__in=brand.split(','))
-
-        id = request.query_params.get('id')
-        if id:
-            queryset = queryset.filter(id__in=id.split(','))
-
-        startPrice = request.query_params.get('startPrice')
-        if startPrice and startPrice.isdigit():
-            queryset = queryset.filter(startPrice__gte=startPrice)
-
-        toPrice = request.query_params.get('toPrice')
-        if toPrice and toPrice.isdigit():
-            queryset = queryset.filter(toPrice__lte=toPrice)
-
         q = request.query_params.get('q')
         if q:
             q_objects = Q()
