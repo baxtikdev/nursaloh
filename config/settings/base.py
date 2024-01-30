@@ -353,15 +353,15 @@ REST_FRAMEWORK = {
 CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ALLOWED_ORIGINS = [
-    'https://nursaloh.baxtikdev.uz',
-    'https://ecommerce.baxtikdev.uz',
+    'https://nursaloh.doppidev.uz',
+    'https://ecommerce.doppidev.uz',
     "http://localhost:5173",
     "http://localhost:3001",
 ]
 
 CORS_ORIGIN_WHITELIST = [
-    'https://nursaloh.baxtikdev.uz',
-    'https://ecommerce.baxtikdev.uz',
+    'https://nursaloh.doppidev.uz',
+    'https://ecommerce.doppidev.uz',
     "http://localhost:5173",
     "http://localhost:3001",
 ]
