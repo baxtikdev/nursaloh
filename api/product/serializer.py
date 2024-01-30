@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
-from api.utils.serializer import SubCategoryListSerializer, UomCreateSerializer, BrandCreateSerializer
+from api.utils.serializer import SubCategoryListSerializer, UomCreateSerializer, BrandCreateSerializer, \
+    CornerStatusCreateSerializer
 from common.product.models import Product, ProductImage
 from config.settings.base import env
 
@@ -15,7 +16,7 @@ class ProductImageInListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductImage
-        fields = ['id', 'guid', 'photo']
+        fields = ['id', 'guid', 'photo', 'isMain']
 
 
 class ProductImageInDetailSerializer(serializers.ModelSerializer):
@@ -28,7 +29,7 @@ class ProductImageInDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductImage
-        fields = ['id', 'guid', 'photo']
+        fields = ['id', 'guid', 'photo', 'isMain']
 
 
 class ProductCreateSerializer(serializers.ModelSerializer):
@@ -41,6 +42,7 @@ class ProductCreateSerializer(serializers.ModelSerializer):
 class ProductListSerializer(serializers.ModelSerializer):
     subcategory = SubCategoryListSerializer()
     images = serializers.SerializerMethodField()
+    cornerStatus = CornerStatusCreateSerializer()
 
     def get_images(self, obj):
         if obj.images:
@@ -58,6 +60,7 @@ class ProductDetailSerializer(serializers.ModelSerializer):
     uom = UomCreateSerializer()
     brand = BrandCreateSerializer()
     images = serializers.SerializerMethodField()
+    cornerStatus = CornerStatusCreateSerializer()
 
     def get_images(self, obj):
         if obj.images:

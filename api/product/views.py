@@ -12,7 +12,8 @@ from common.product.models import Product, ProductImage
 
 @extend_schema(tags=["Product"])
 class ProductAPIView(ModelViewSet):
-    queryset = Product.objects.select_related('subcategory', 'subcategory__category', 'brand', 'uom').all()
+    queryset = Product.objects.select_related('subcategory', 'subcategory__category', 'brand', 'uom',
+                                              'cornerStatus').all()
     serializer_class = ProductCreateSerializer
     pagination_class = CustomPagination
     filter_backends = [ProductFilter, OrderingFilter]
@@ -34,8 +35,12 @@ class ProductAPIView(ModelViewSet):
             queryset = queryset.filter(brand__id__in=brand.split(','))
 
         id = self.request.query_params.get('id')
+        exclude = self.request.query_params.get('exclude')
         if id:
-            queryset = queryset.filter(id__in=id.split(','))
+            if exclude:
+                queryset = queryset.exclude(id=id)
+            elif exclude is None:
+                queryset = queryset.filter(id__in=id.split(','))
 
         startPrice = self.request.query_params.get('startPrice')
         if startPrice and startPrice.isdigit():

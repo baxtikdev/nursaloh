@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from common.product.models import Category, SubCategory, Brand, Uom
+from common.product.models import Category, SubCategory, Brand, Uom, CornerStatus
 from common.users.models import Address
 from config.settings.base import env
 
@@ -85,6 +85,12 @@ class SubCategoryDetailSerializer(serializers.ModelSerializer):
 class BrandCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Brand
+        fields = ['id', 'guid', 'title']
+
+
+class CornerStatusCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CornerStatus
         fields = ['id', 'guid', 'title']
 
 
