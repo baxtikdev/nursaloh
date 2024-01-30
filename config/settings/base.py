@@ -380,17 +380,6 @@ CACHE_TTL = 60 * 5
 
 FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10 Mb limit
 
-# PAYME
-PAYME_SETTINGS = {
-    'DEBUG': False,  # True - test mode, False - production mode
-    'ID': env('PAYME_ID'),
-    'SECRET_KEY': env('PAYME_SECRET_KEY'),  # '#MWnwHNYATJo%W@XvO5nISiY&mG7PEuzDX18',
-    'ACCOUNTS': {
-        'KEY_1': 'order_id',
-        'KEY_2': '',
-    }
-}
-
 # CLICK
 PAYMENT_HOST = env('CLICK_PAYMENT_HOST')
 CLICK_SERVICE_ID = env('CLICK_SERVICE_ID')
