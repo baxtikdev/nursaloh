@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+
 from common.users.base import BaseModel
 
 User = get_user_model()
@@ -18,11 +19,13 @@ class PaymentType(models.IntegerChoices):
     PAYME = 1, "PAYME"
     CLICK = 2, "CLICK"
     UZUM = 3, "UZUM"
+    CASH = 4, "CASH"
 
 
 class Payment(BaseModel):
     user = models.ForeignKey(User, related_name="userPayment", on_delete=models.CASCADE)
-    order = models.ForeignKey("order.Order", related_name="orderPayment", on_delete=models.SET_NULL, null=True, blank=True)
+    order = models.ForeignKey("order.Order", related_name="orderPayment", on_delete=models.SET_NULL, null=True,
+                              blank=True)
     amount = models.FloatField(default=0, null=True)
     paymentType = models.IntegerField(choices=PaymentType.choices)
     status = models.CharField(max_length=20, choices=PaymentStatus.choices, default=PaymentStatus.WAITING)

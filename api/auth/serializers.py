@@ -100,10 +100,6 @@ class VerifyCodeSerializer(serializers.Serializer):
         read_only_fields = ['id', 'guid', 'phone', 'name', 'access', 'refresh', 'role']
 
 
-class LogOutSerializer(serializers.Serializer):
-    refresh = serializers.CharField(write_only=True, max_length=255, required=True)
-
-
 class UserLoginSerializer(serializers.ModelSerializer):
     user_id = serializers.IntegerField(read_only=True)
     user_guid = serializers.CharField(read_only=True)

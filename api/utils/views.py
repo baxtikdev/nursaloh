@@ -6,8 +6,9 @@ from rest_framework.viewsets import ModelViewSet
 from api.paginator import CustomPagination
 from api.utils.serializer import CategoryCreateSerializer, SubCategoryCreateSerializer, CategoryListSerializer, \
     CategoryDetailSerializer, SubCategoryListSerializer, SubCategoryDetailSerializer, BrandCreateSerializer, \
-    UomCreateSerializer
+    UomCreateSerializer, AddressCreateSerializer
 from common.product.models import Category, SubCategory, Brand, Uom
+from common.users.models import Address
 
 
 @extend_schema(tags=["Category"])
@@ -16,6 +17,7 @@ class CategoryAPIView(ModelViewSet):
     serializer_class = CategoryCreateSerializer
     pagination_class = CustomPagination
     filter_backends = [OrderingFilter]
+    ordering_fields = ['created_at']
     lookup_field = 'guid'
 
     def get_queryset(self):
@@ -44,6 +46,8 @@ class SubCategoryAPIView(ModelViewSet):
     queryset = SubCategory.objects.select_related('category').all()
     serializer_class = SubCategoryCreateSerializer
     pagination_class = CustomPagination
+    filter_backends = [OrderingFilter]
+    ordering_fields = ['created_at']
     lookup_field = 'guid'
 
     def list(self, request, *args, **kwargs):
@@ -60,6 +64,8 @@ class BrandAPIView(ModelViewSet):
     queryset = Brand.objects.all()
     serializer_class = BrandCreateSerializer
     pagination_class = CustomPagination
+    filter_backends = [OrderingFilter]
+    ordering_fields = ['created_at']
     lookup_field = 'guid'
 
 
@@ -68,4 +74,23 @@ class UomAPIView(ModelViewSet):
     queryset = Uom.objects.all()
     serializer_class = UomCreateSerializer
     pagination_class = CustomPagination
+    filter_backends = [OrderingFilter]
+    ordering_fields = ['created_at']
     lookup_field = 'guid'
+
+
+@extend_schema(tags=["Address"])
+class AddressAPIView(ModelViewSet):
+    queryset = Address.objects.all()
+    serializer_class = AddressCreateSerializer
+    pagination_class = CustomPagination
+    filter_backends = [OrderingFilter]
+    ordering_fields = ['created_at']
+    lookup_field = 'guid'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        user = self.request.query_params.get('user')
+        if user:
+            queryset = queryset.filter(user=user)
+        return queryset

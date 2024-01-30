@@ -1,7 +1,7 @@
 from django.db.models import Q
 from rest_framework import filters
 
-from common.order.models import PaymentTypes, PaymentStatus
+from common.payment.models import PaymentStatus, PaymentType
 from common.users.models import User
 
 
@@ -73,7 +73,7 @@ class OrderFilter(filters.BaseFilterBackend):
                 Q(paymentStatus=PaymentStatus.REJECTED) |
                 Q(paymentStatus=PaymentStatus.REFUNDED) |
                 Q(paymentStatus=PaymentStatus.CONFIRMED) |
-                Q(paymentType=PaymentTypes.CASH)))
+                Q(paymentType=PaymentType.CASH)))
         start = request.query_params.get('start')
         end = request.query_params.get('end')
         if start and end:

@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from common.product.models import Category, SubCategory, Brand, Uom
+from common.users.models import Address
 from config.settings.base import env
 
 
@@ -91,3 +92,9 @@ class UomCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Uom
         fields = ['id', 'guid', 'title']
+
+
+class AddressCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        fields = ['id', 'guid', 'user', 'region', 'district', 'street', 'location']

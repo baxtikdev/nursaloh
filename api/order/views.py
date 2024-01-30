@@ -11,7 +11,8 @@ from api.order.serializers import OrderCreateSerializer, OrderListSerializer, Or
     OrderProductCreateSerializer
 from api.paginator import CustomPagination
 from api.permissions import IsClient, IsAdmin
-from common.order.models import Order, OrderProduct, OrderStatus, PaymentTypes
+from common.order.models import Order, OrderProduct, OrderStatus
+from common.payment.models import PaymentType
 from common.product.models import Product
 
 
@@ -19,10 +20,10 @@ from common.product.models import Product
 class OrderAPIView(ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderCreateSerializer
-    permission_classes = [IsClient | IsAdmin]
     filter_backends = [OrderFilter, OrderingFilter]
     ordering_fields = ['created_at']
     pagination_class = CustomPagination
+    permission_classes = [IsClient | IsAdmin]
     lookup_field = 'guid'
 
     def get_queryset(self):
@@ -33,7 +34,7 @@ class OrderAPIView(ModelViewSet):
                 lookup="products",
                 queryset=OrderProduct.objects.select_related('product', 'product__uom', 'product__brand',
                                                              'product__cornerStatus').all(),
-                to_attr="orderProducts"
+                # to_attr="orderProducts"
             )
         ).annotate(orderCount=Count('products'))
 
@@ -43,17 +44,17 @@ class OrderAPIView(ModelViewSet):
         orderProducts = request.data.get('orderProducts', [])
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        # orderProducts = [
+        #     {
+        #         "product": 1,
+        #         "quantity": 4,
+        #     }
+        # ]
         if not orderProducts:
             return Response({"orderProducts": ["This field is required."]}, status=status.HTTP_400_BAD_REQUEST)
         orderedProducts = []
         totalAmount = 0
         for orderProduct in orderProducts:
-
-            # orderProducts = [{
-            #     "product": 1,
-            #     "quantity": 4,
-            # }]
-
             product = orderProduct.get('product')
             quantity = orderProduct.get('quantity')
             product = Product.objects.filter(id=product).first()
@@ -70,7 +71,7 @@ class OrderAPIView(ModelViewSet):
             OrderProduct.objects.bulk_create(orderProducts)
 
         order = serializer.save()
-        if order.paymentType == PaymentTypes.CASH:
+        if order.paymentType == PaymentType.CASH:
             order.status = OrderStatus.PENDING
         order.products.set(orderProducts)
         order.totalAmount = totalAmount

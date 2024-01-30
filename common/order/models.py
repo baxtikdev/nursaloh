@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
 
-from common.payment.payme.models import PaymentStatus
+from common.payment.models import PaymentStatus, PaymentType
 from common.product.models import Product
 from common.users.base import BaseModel, BaseMeta
 from common.users.models import Address
@@ -18,13 +18,6 @@ class OrderStatus(models.IntegerChoices):
     CANCELED = 4, "CANCELED"
     IN_PROGRESS = 5, "IN_PROGRESS"
     DELETED = 6, "DELETED"
-
-
-class PaymentTypes(models.IntegerChoices):
-    PAYME = 1, "PAYME"
-    CLICK = 2, "CLICK"
-    UZUM = 3, "UZUM"
-    CASH = 4, "CASH"
 
 
 class OrderProduct(BaseModel):
@@ -49,7 +42,7 @@ class Order(BaseModel):
     comment = models.TextField(null=True, blank=True)
 
     paymentStatus = models.CharField(max_length=20, choices=PaymentStatus.choices, default=PaymentStatus.WAITING)
-    paymentType = models.IntegerField(choices=PaymentTypes.choices, default=PaymentTypes.CASH)
+    paymentType = models.IntegerField(choices=PaymentType.choices, default=PaymentType.CASH)
     status = models.IntegerField(choices=OrderStatus.choices, default=OrderStatus.PAYMENT)
 
     class Meta(BaseMeta):

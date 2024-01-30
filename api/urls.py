@@ -1,7 +1,7 @@
-from django.urls import path
+from django.urls import path, include
 
 from api.router import urlpatterns
 
 urlpatterns += [
-    # path('sign_in/', SignInAPIView.as_view(), name='sign_in'),
+    path('payment', include("api.payment.click.urls")),
 ]
