@@ -35,29 +35,29 @@ class CategoryListSerializer(serializers.ModelSerializer):
     subcategories = SubCategoryWithNumberSerializer(many=True)
     subcategoryCount = serializers.IntegerField(default=0)
     categoryProductCount = serializers.IntegerField(default=0)
-    photo_small = serializers.SerializerMethodField()
+    photo = serializers.SerializerMethodField()
 
-    def get_photo_small(self, obj):
+    def get_photo(self, obj):
         if obj.photo:
             return env('BASE_URL') + obj.photo_small.url
         return None
 
     class Meta:
         model = Category
-        fields = ['id', 'guid', 'title', 'photo_small', 'subcategories', 'subcategoryCount', 'categoryProductCount']
+        fields = ['id', 'guid', 'title', 'photo', 'subcategories', 'subcategoryCount', 'categoryProductCount']
 
 
 class CategoryDetailSerializer(serializers.ModelSerializer):
-    photo_medium = serializers.SerializerMethodField()
+    photo = serializers.SerializerMethodField()
 
-    def get_photo_medium(self, banner):
-        if banner.photo:
-            return env('BASE_URL') + banner.photo_medium.url
+    def get_photo(self, obj):
+        if obj.photo:
+            return env('BASE_URL') + obj.photo_medium.url
         return None
 
     class Meta:
         model = Category
-        fields = ['id', 'guid', 'title', 'photo_medium']
+        fields = ['id', 'guid', 'title', 'photo']
 
 
 class SubCategoryCreateSerializer(serializers.ModelSerializer):

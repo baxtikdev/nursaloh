@@ -77,7 +77,7 @@ class ProductAPIView(ModelViewSet):
         queryset = self.get_queryset().prefetch_related(
             Prefetch(
                 lookup="productProductImage",
-                queryset=ProductImage.objects.filter(isMain=True).all(),
+                queryset=ProductImage.objects.all(),  # .filter(isMain=True).all(),
                 to_attr="images"
             )
         )
