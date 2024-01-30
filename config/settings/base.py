@@ -352,19 +352,19 @@ REST_FRAMEWORK = {
 # CORS_URLS_REGEX = r"^/api/.*$"
 CORS_ORIGIN_ALLOW_ALL = True
 
-CORS_ALLOWED_ORIGINS = [
-    'https://nursaloh.doppidev.uz',
-    'https://ecommerce.doppidev.uz',
-    "http://localhost:5173",
-    "http://localhost:3001",
-]
-
-CORS_ORIGIN_WHITELIST = [
-    'https://nursaloh.doppidev.uz',
-    'https://ecommerce.doppidev.uz',
-    "http://localhost:5173",
-    "http://localhost:3001",
-]
+# CORS_ALLOWED_ORIGINS = [
+#     'https://nursaloh.doppidev.uz',
+#     'https://ecommerce.doppidev.uz',
+#     "http://localhost:5173",
+#     "http://localhost:3001",
+# ]
+#
+# CORS_ORIGIN_WHITELIST = [
+#     'https://nursaloh.doppidev.uz',
+#     'https://ecommerce.doppidev.uz',
+#     "http://localhost:5173",
+#     "http://localhost:3001",
+# ]
 
 CSRF_TRUSTED_ORIGINS = [
     'https://ecommerce.doppidev.uz',
