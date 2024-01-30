@@ -6,8 +6,6 @@ from django.urls import include, path
 from django.views import defaults as default_views
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
-# from rest_framework.authtoken.views import obtain_auth_token
-
 urlpatterns = [
     path('', lambda request: JsonResponse({'message': 'Welcome to Nursaloh Backend!'})),
     path(settings.ADMIN_URL, admin.site.urls),
@@ -22,8 +20,6 @@ urlpatterns = [
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
-    # This allows the error pages to be debugged during development, just visit
-    # these url in browser to see how these error pages look like.
     urlpatterns += [
         path(
             "400/",
