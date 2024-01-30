@@ -66,7 +66,7 @@ DJANGO_APPS = [
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
-    "django.contrib.sites",
+    # "django.contrib.sites",
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # "django.contrib.humanize", # Handy template tags
@@ -77,12 +77,12 @@ THIRD_PARTY_APPS = [
     "crispy_forms",
     "crispy_bootstrap5",
     "allauth",
-    "allauth.account",
-    "allauth.socialaccount",
+    # "allauth.account",
+    # "allauth.socialaccount",
     "django_celery_beat",
     "rest_framework",
     "rest_framework_simplejwt",
-    "rest_framework.authtoken",
+    # "rest_framework.authtoken",
     "corsheaders",
     "drf_spectacular",
 
@@ -351,6 +351,20 @@ REST_FRAMEWORK = {
 # django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
 # CORS_URLS_REGEX = r"^/api/.*$"
 CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOWED_ORIGINS = [
+    'https://nursaloh.baxtikdev.uz',
+    'https://ecommerce.baxtikdev.uz',
+    "http://localhost:5173",
+    "http://localhost:3001",
+]
+
+CORS_ORIGIN_WHITELIST = [
+    'https://nursaloh.baxtikdev.uz',
+    'https://ecommerce.baxtikdev.uz',
+    "http://localhost:5173",
+    "http://localhost:3001",
+]
 
 CSRF_TRUSTED_ORIGINS = [
     'https://ecommerce.doppidev.uz',
