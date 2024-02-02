@@ -9,8 +9,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from api.auth.serializers import LogOutSerializer, LoginSerializer, SignUpSerializer, UserLoginSerializer, \
     VerifyCodeSerializer, \
     ReSendCodeSerializer
-from common.users.models import Code
 from api.tasks import send_sms
+from common.users.models import Code
 
 User = get_user_model()
 
@@ -32,6 +32,18 @@ class SignUpAPIView(CreateAPIView):
     permission_classes = [AllowAny]
 
     def create(self, request, *args, **kwargs):
+        phone = request.data.get('phone')
+        if phone:
+            user = User.objects.filter(phone=phone).first()
+            if user and user.is_verified:
+                return Response({"phone": ["A user with that phone already exists."]},
+                                status=status.HTTP_400_BAD_REQUEST)
+            send_sms.apply_async([user.id, user.phone])
+            name = request.data.get('name')
+            if name:
+                user.name = request.data.get('name')
+                user.save()
+            return Response(self.serializer_class(user).data, status=status.HTTP_200_OK)
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
