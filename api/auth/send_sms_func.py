@@ -2,11 +2,9 @@ from base64 import b64encode
 
 import requests
 
-from config.settings.base import env
-
-URL = env("URL")
-USERNAME = env("USERNAME")
-PASSWORD = env("PASSWORD")
+URL = "https://send.smsxabar.uz/broker-api/send"  # env("URL")
+USERNAME = "mdgroup"  # env("USERNAME")
+PASSWORD = ",8B#V№5&emuP"  # env("PASSWORD")
 credentials = f"{USERNAME}:{PASSWORD}"
 encodedCredentials = str(b64encode(credentials.encode("utf-8")), "utf-8")
 AUTHORIZATION = {
@@ -33,6 +31,7 @@ def sent_sms_base(id, user_code, phone_number):
 
     }
     response = requests.post(url=URL, json=data, headers=AUTHORIZATION)
+    print(response, response.status_code)
     result = response.status_code
     if result == 200:
         return True
