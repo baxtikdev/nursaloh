@@ -40,8 +40,8 @@ class SignUpAPIView(CreateAPIView):
                                 status=status.HTTP_400_BAD_REQUEST)
 
             name = request.data.get('name')
-            if name:
-                user.name = request.data.get('name')
+            if user and name:
+                user.name = name
                 user.save()
                 send_sms.apply_async([user.id, user.phone])
             return Response(self.serializer_class(user).data, status=status.HTTP_200_OK)
