@@ -32,5 +32,6 @@ def sent_sms_base(id, user_code, phone_number):
     }
     response = requests.post(url=URL, json=data, headers=AUTHORIZATION)
     result = response.status_code
+    print(result)
     if result == 200:
         return True
