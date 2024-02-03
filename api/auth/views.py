@@ -38,11 +38,12 @@ class SignUpAPIView(CreateAPIView):
             if user and user.is_verified:
                 return Response({"phone": ["A user with that phone already exists."]},
                                 status=status.HTTP_400_BAD_REQUEST)
-            send_sms.apply_async([user.id, user.phone])
+
             name = request.data.get('name')
             if name:
                 user.name = request.data.get('name')
                 user.save()
+                send_sms.apply_async([user.id, user.phone])
             return Response(self.serializer_class(user).data, status=status.HTTP_200_OK)
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
