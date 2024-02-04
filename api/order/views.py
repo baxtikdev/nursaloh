@@ -65,7 +65,7 @@ class OrderAPIView(ModelViewSet):
 
             orderProduct_serializer = OrderProductCreateSerializer(data=orderProduct)
             orderProduct_serializer.is_valid(raise_exception=True)
-            orderedProducts.append(**orderProduct_serializer.validated_data)
+            orderedProducts.append(OrderProduct(**orderProduct_serializer.validated_data))
             totalAmount += round(product.with_discount * quantity, 3)
         if orderedProducts:
             OrderProduct.objects.bulk_create(orderProducts)
