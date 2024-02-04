@@ -77,7 +77,7 @@ class Product(BaseModel):
     size = models.CharField(max_length=30, null=True, blank=True)
     manufacturer = models.CharField(max_length=20, null=True, blank=True)
     quantity = models.IntegerField(default=0)
-    discount = models.FloatField(default=0)
+    discount = models.DecimalField(max_digits=50, decimal_places=3, default=0)
     isTop = models.BooleanField(_("Is Top"), default=False)
     cornerStatus = models.ForeignKey(CornerStatus, related_name="cornerStatusProduct", on_delete=models.SET_NULL,
                                      null=True, blank=True)
@@ -88,7 +88,7 @@ class Product(BaseModel):
 
     @property
     def with_discount(self):
-        return self.price * (1 - 1 / self.discount)
+        return self.price - self.discount
 
     def __str__(self):
         return self.title
