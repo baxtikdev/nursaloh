@@ -76,10 +76,9 @@ class OrderAPIView(ModelViewSet):
         order = serializer.save()
         if order.paymentType == PaymentType.CASH:
             order.status = OrderStatus.PENDING
-        order.products.set(orderProducts)
+        order.products.set(orderedProducts)
         order.totalAmount = totalAmount
         order.save()
-        # "billing_url": "https://my.click.uz/services/pay?service_id=28420&merchant_id=11369&return_url=https://kale.uz/profile/purchases-history&amount=30000.0&transaction_param=325",
         billing_url = create_initialization_click(totalAmount, order.id)
         data = serializer.data
         data['billing_url'] = billing_url
