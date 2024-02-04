@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.db.models import Prefetch, Count
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
@@ -10,6 +12,7 @@ from api.filters import OrderFilter
 from api.order.serializers import OrderCreateSerializer, OrderListSerializer, OrderDetailSerializer, \
     OrderProductCreateSerializer
 from api.paginator import CustomPagination
+from api.payment.payment_utils import create_initialization_click
 from api.permissions import IsClient, IsAdmin
 from common.order.models import Order, OrderProduct, OrderStatus
 from common.payment.models import PaymentType
@@ -53,7 +56,7 @@ class OrderAPIView(ModelViewSet):
         if not orderProducts:
             return Response({"orderProducts": ["This field is required."]}, status=status.HTTP_400_BAD_REQUEST)
         orderedProducts = []
-        totalAmount = 0
+        totalAmount = Decimal(0)
         for orderProduct in orderProducts:
             product = orderProduct.get('product')
             quantity = orderProduct.get('quantity')
@@ -68,7 +71,7 @@ class OrderAPIView(ModelViewSet):
             orderedProducts.append(OrderProduct(**orderProduct_serializer.validated_data))
             totalAmount += round(product.with_discount * quantity, 3)
         if orderedProducts:
-            OrderProduct.objects.bulk_create(orderProducts)
+            OrderProduct.objects.bulk_create(orderedProducts)
 
         order = serializer.save()
         if order.paymentType == PaymentType.CASH:
@@ -76,7 +79,11 @@ class OrderAPIView(ModelViewSet):
         order.products.set(orderProducts)
         order.totalAmount = totalAmount
         order.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        # "billing_url": "https://my.click.uz/services/pay?service_id=28420&merchant_id=11369&return_url=https://kale.uz/profile/purchases-history&amount=30000.0&transaction_param=325",
+        billing_url = create_initialization_click(totalAmount, order.id)
+        data = serializer.data
+        data['billing_url'] = billing_url
+        return Response(data, status=status.HTTP_201_CREATED)
 
     def list(self, request, *args, **kwargs):
         self.serializer_class = OrderListSerializer

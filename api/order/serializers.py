@@ -23,10 +23,11 @@ class OrderCreateSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     installation = serializers.BooleanField()
     paymentType = serializers.IntegerField()
+    billing_url = serializers.CharField(allow_null=True, read_only=True)
 
     class Meta:
         model = Order
-        fields = ['id', 'guid', 'user', 'address', 'installation', 'comment', 'paymentType']
+        fields = ['id', 'guid', 'user', 'address', 'installation', 'comment', 'paymentType', 'billing_url']
 
 
 class OrderListSerializer(serializers.ModelSerializer):
