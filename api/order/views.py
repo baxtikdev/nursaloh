@@ -60,13 +60,13 @@ class OrderAPIView(ModelViewSet):
             product = Product.objects.filter(id=product).first()
             if product is None:
                 raise ProductNotFoundException()
-            orderProduct['orderPrice'] = product.with_discount
-            orderProduct['discount'] = product.discount
+            orderProduct['orderPrice'] = round(product.with_discount, 3)
+            orderProduct['discount'] = round(product.discount, 3)
 
             orderProduct_serializer = OrderProductCreateSerializer(data=orderProduct)
             orderProduct_serializer.is_valid(raise_exception=True)
             orderedProducts.append(**orderProduct_serializer.validated_data)
-            totalAmount += product.with_discount * quantity
+            totalAmount += round(product.with_discount * quantity, 3)
         if orderedProducts:
             OrderProduct.objects.bulk_create(orderProducts)
 
