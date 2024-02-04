@@ -23,7 +23,7 @@ class OrderStatus(models.IntegerChoices):
 class OrderProduct(BaseModel):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.FloatField()
-    orderPrice = models.DecimalField(max_digits=50, decimal_places=2, default=0)
+    orderPrice = models.DecimalField(max_digits=50, decimal_places=3, default=0)
     discount = models.FloatField(default=0)
 
     def __str__(self):
