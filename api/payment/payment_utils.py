@@ -16,10 +16,4 @@ from decimal import Decimal
 #     return url
 
 def create_initialization_click(amount: Decimal, order_id: str):
-    url = (f"https://my.click.uz/services/pay?"
-           f"service_id=28420&"
-           f"merchant_id=11369&"
-           "return_url=https://kale.uz/profile/purchases-history&"
-           f"amount={amount}&"
-           f"transaction_param={order_id}")
-    return url
+    return f"https://my.click.uz/services/pay?service_id=28420&merchant_id=11369&return_url=https://kale.uz/profile/purchases-history&amount={amount}&transaction_param={order_id}"

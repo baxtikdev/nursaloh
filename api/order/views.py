@@ -79,9 +79,11 @@ class OrderAPIView(ModelViewSet):
         order.products.set(orderedProducts)
         order.totalAmount = totalAmount
         order.save()
-        billing_url = create_initialization_click(totalAmount, order.id)
         data = serializer.data
-        data['billing_url'] = billing_url
+        if order.paymentType == PaymentType.CLICK:
+            data['billing_url'] = create_initialization_click(totalAmount, order.id)
+        elif order.paymentType == PaymentType.UZUM:
+            pass
         return Response(data, status=status.HTTP_201_CREATED)
 
     def list(self, request, *args, **kwargs):
