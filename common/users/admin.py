@@ -2,12 +2,13 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 
-from common.users.models import Code
+from common.users.models import Code, Address
 
 User = get_user_model()
 
 admin.site.unregister(Group)
 admin.site.register(Code)
+admin.site.register(Address)
 
 
 @admin.register(User)

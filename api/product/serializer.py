@@ -45,7 +45,7 @@ class ProductListSerializer(serializers.ModelSerializer):
     cornerStatus = CornerStatusCreateSerializer()
 
     def get_images(self, obj):
-        if obj.images:
+        if hasattr(obj, 'images'):
             return ProductImageInListSerializer(obj.images, many=True).data
         return []
 
@@ -63,7 +63,7 @@ class ProductDetailSerializer(serializers.ModelSerializer):
     cornerStatus = CornerStatusCreateSerializer()
 
     def get_images(self, obj):
-        if obj.images:
+        if hasattr(obj, 'images'):
             return ProductImageInDetailSerializer(obj.images, many=True).data
         return []
 

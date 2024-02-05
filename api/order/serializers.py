@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from api.product.serializer import ProductDetailSerializer
+from api.product.serializer import ProductListSerializer, ProductImageInListSerializer
 from common.order.models import Order, OrderProduct
 from common.users.models import User
 
@@ -12,7 +12,7 @@ class OrderProductCreateSerializer(serializers.ModelSerializer):
 
 
 class OrderProductListSerializer(serializers.ModelSerializer):
-    product = ProductDetailSerializer()
+    product = ProductListSerializer()
 
     class Meta:
         model = OrderProduct

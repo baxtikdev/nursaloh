@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from django.db.models import Prefetch, Count
+from django.db.models import Prefetch
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.filters import OrderingFilter
@@ -16,17 +16,17 @@ from api.payment.payment_utils import create_initialization_click
 from api.permissions import IsClient, IsAdmin
 from common.order.models import Order, OrderProduct, OrderStatus
 from common.payment.models import PaymentType
-from common.product.models import Product
+from common.product.models import Product, ProductImage
 
 
 @extend_schema(tags=["Order"])
 class OrderAPIView(ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderCreateSerializer
-    filter_backends = [OrderFilter, OrderingFilter]
-    ordering_fields = ['created_at']
+    # filter_backends = [OrderFilter, OrderingFilter]
+    # ordering_fields = ['created_at']
     pagination_class = CustomPagination
-    permission_classes = [IsClient | IsAdmin]
+    # permission_classes = [IsClient | IsAdmin]
     lookup_field = 'guid'
 
     def get_queryset(self):
@@ -35,8 +35,14 @@ class OrderAPIView(ModelViewSet):
             prefetch_related(
             Prefetch(
                 lookup="products",
-                queryset=OrderProduct.objects.select_related('product', 'product__uom', 'product__brand',
-                                                             'product__cornerStatus').all()
+                queryset=OrderProduct.objects.select_related('product', 'product__subcategory',
+                                                             'product__cornerStatus').prefetch_related(
+                    Prefetch(
+                        lookup="product__productProductImage",
+                        queryset=ProductImage.objects.all(),  # .filter(isMain=True).all(),
+                        to_attr="images"
+                    )
+                ).all()
             )
         )
 
