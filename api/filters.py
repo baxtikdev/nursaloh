@@ -2,7 +2,7 @@ from django.db.models import Q
 from rest_framework import filters
 
 from common.payment.models import PaymentStatus, PaymentType
-from common.users.models import User
+from common.users.models import UserRole
 
 
 class ProductFilter(filters.BaseFilterBackend):
@@ -68,7 +68,7 @@ class OrderFilter(filters.BaseFilterBackend):
 
             queryset = queryset.filter(q_objects)
 
-        if request.user.role == User.UserRole.CLIENT:
+        if request.user.role == UserRole.CLIENT:
             queryset = queryset.filter(Q(user=request.user) & (
                 Q(paymentStatus=PaymentStatus.REJECTED) |
                 Q(paymentStatus=PaymentStatus.REFUNDED) |
