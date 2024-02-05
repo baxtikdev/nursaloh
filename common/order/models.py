@@ -51,7 +51,7 @@ class Order(BaseModel):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         if self.code is None:
-            self.code = 'P' + str(self.id + (10 ** 4))
+            self.code = 'O' + str(self.id + (10 ** 4))
             self.save()
 
     def __str__(self):
