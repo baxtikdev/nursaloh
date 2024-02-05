@@ -23,10 +23,10 @@ from common.product.models import Product, ProductImage
 class OrderAPIView(ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderCreateSerializer
-    # filter_backends = [OrderFilter, OrderingFilter]
-    # ordering_fields = ['created_at']
+    filter_backends = [OrderFilter, OrderingFilter]
+    ordering_fields = ['created_at']
     pagination_class = CustomPagination
-    # permission_classes = [IsClient | IsAdmin]
+    permission_classes = [IsClient | IsAdmin]
     lookup_field = 'guid'
 
     def get_queryset(self):
