@@ -36,10 +36,9 @@ class OrderAPIView(ModelViewSet):
             Prefetch(
                 lookup="products",
                 queryset=OrderProduct.objects.select_related('product', 'product__uom', 'product__brand',
-                                                             'product__cornerStatus').all(),
-                # to_attr="orderProducts"
+                                                             'product__cornerStatus').all()
             )
-        ).annotate(orderCount=Count('products'))
+        )
 
         return queryset
 
@@ -47,12 +46,6 @@ class OrderAPIView(ModelViewSet):
         orderProducts = request.data.get('orderProducts', [])
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        # orderProducts = [
-        #     {
-        #         "product": 1,
-        #         "quantity": 4,
-        #     }
-        # ]
         if not orderProducts:
             return Response({"orderProducts": ["This field is required."]}, status=status.HTTP_400_BAD_REQUEST)
         orderedProducts = []
