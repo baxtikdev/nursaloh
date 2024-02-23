@@ -15,5 +15,13 @@ from decimal import Decimal
 #     url = f"{LINK}/{encode_params}"
 #     return url
 
+
+# CLICK_PAYMENT_HOST=nursaloh.doppidev.uz
+# CLICK_MERCHANT_ID=21049
+# CLICK_SERVICE_ID=32155
+# CLICK_MERCHANT_USER_ID=39083
+# CLICK_SECRET_KEY=WCnIUlI3Ihdj
+
+
 def create_initialization_click(amount: Decimal, order_id: str):
-    return f"https://my.click.uz/services/pay?service_id=28420&merchant_id=11369&return_url=https://kale.uz/profile/purchases-history&amount={amount}&transaction_param={order_id}"
+    return f"https://my.click.uz/services/pay?service_id=32155&merchant_id=21049&return_url=https://nursaloh.doppidev.uz/profile/history&amount={amount}&transaction_param={order_id}"
