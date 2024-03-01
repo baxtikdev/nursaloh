@@ -357,6 +357,8 @@ CORS_ALLOWED_ORIGINS = [
     'https://ecommerce.doppidev.uz',
     "http://localhost:5173",
     "http://localhost:3001",
+    'https://api.nursaloh.uz',
+    'https://test.nursaloh.uz'
 ]
 
 CORS_ORIGIN_WHITELIST = [
@@ -364,11 +366,15 @@ CORS_ORIGIN_WHITELIST = [
     'https://ecommerce.doppidev.uz',
     "http://localhost:5173",
     "http://localhost:3001",
+    'https://api.nursaloh.uz',
+    'https://test.nursaloh.uz'
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     'https://ecommerce.doppidev.uz',
-    'https://nursaloh.doppidev.uz'
+    'https://nursaloh.doppidev.uz',
+    'https://api.nursaloh.uz',
+    'https://test.nursaloh.uz'
 ]
 
 # By Default swagger ui is available only to admin user(s). You can change permission classes to change that

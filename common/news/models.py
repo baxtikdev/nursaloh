@@ -12,10 +12,10 @@ class News(BaseModel):
     description = models.TextField(null=True, blank=True)
     videoURL = models.URLField(null=True, blank=True)
     photo = models.ImageField(_("Image of News"), upload_to='newsImage')
-    photo_medium = ImageSpecField(source='photo', processors=[ResizeToFill(966, 627)], format='PNG',
-                                  options={'quality': 90})
     photo_small = ImageSpecField(source='photo', processors=[ResizeToFill(322, 209)], format='PNG',
                                  options={'quality': 70})
+    photo_medium = ImageSpecField(source='photo', processors=[ResizeToFill(966, 627)], format='PNG',
+                                  options={'quality': 90})
     viewCount = models.IntegerField(default=0)
     status = models.BooleanField(default=False)
     isActual = models.BooleanField(default=False)

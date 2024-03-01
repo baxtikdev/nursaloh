@@ -3,9 +3,9 @@ from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import ModelViewSet
 
-from api.news.serializers import NewsListSerializer, NewsCreateSerializer
+from api.news.serializers import NewsListSerializer, NewsCreateSerializer, NewsDetailSerializer
 from api.paginator import CustomPagination
-from api.permissions import IsClient, IsAdmin
+from api.permissions import IsAdmin
 from common.news.models import News
 
 
@@ -16,7 +16,6 @@ class NewsAPIView(ModelViewSet):
     filter_backends = [OrderingFilter]
     ordering_fields = ['created_at']
     pagination_class = CustomPagination
-    permission_classes = [IsClient | IsAdmin]
     lookup_field = 'guid'
 
     def get_permissions(self):
@@ -28,6 +27,9 @@ class NewsAPIView(ModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
+        isActual = self.request.query_params.get('isActual')
+        if isActual == 'true':
+            queryset = queryset.filter(isActual=True)
         q = self.request.query_params.get('q')
         if q:
             queryset = queryset.filter(title__icontains=q)
@@ -36,3 +38,7 @@ class NewsAPIView(ModelViewSet):
     def list(self, request, *args, **kwargs):
         self.serializer_class = NewsListSerializer
         return super().list(request, *args, **kwargs)
+
+    def retrieve(self, request, *args, **kwargs):
+        self.serializer_class = NewsDetailSerializer
+        return super().retrieve(request, *args, **kwargs)
