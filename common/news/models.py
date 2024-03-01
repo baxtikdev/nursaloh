@@ -8,6 +8,7 @@ from common.users.base import BaseModel, BaseMeta
 
 class News(BaseModel):
     title = models.CharField(max_length=250, null=True, blank=True)
+    middle_description = models.TextField(null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     videoURL = models.URLField(null=True, blank=True)
     photo = models.ImageField(_("Image of News"), upload_to='newsImage')

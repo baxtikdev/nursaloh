@@ -1,13 +1,15 @@
 from django.db.models import Prefetch, Count
 from drf_spectacular.utils import extend_schema
 from rest_framework.filters import OrderingFilter
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
 from api.paginator import CustomPagination
+from api.permissions import IsAdmin
 from api.utils.serializer import CategoryCreateSerializer, SubCategoryCreateSerializer, CategoryListSerializer, \
     CategoryDetailSerializer, SubCategoryListSerializer, SubCategoryDetailSerializer, BrandCreateSerializer, \
-    UomCreateSerializer, AddressCreateSerializer
-from common.product.models import Category, SubCategory, Brand, Uom
+    UomCreateSerializer, AddressCreateSerializer, CornerStatusCreateSerializer
+from common.product.models import Category, SubCategory, Brand, Uom, CornerStatus
 from common.users.models import Address
 
 
@@ -19,6 +21,13 @@ class CategoryAPIView(ModelViewSet):
     filter_backends = [OrderingFilter]
     ordering_fields = ['created_at']
     lookup_field = 'guid'
+
+    def get_permissions(self):
+        if self.request.method in ['POST', 'PUT', 'PATCH', 'DELETE']:
+            permission_classes = [IsAdmin]
+        else:
+            permission_classes = [AllowAny]
+        return [permission() for permission in permission_classes]
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -50,6 +59,13 @@ class SubCategoryAPIView(ModelViewSet):
     ordering_fields = ['created_at']
     lookup_field = 'guid'
 
+    def get_permissions(self):
+        if self.request.method in ['POST', 'PUT', 'PATCH', 'DELETE']:
+            permission_classes = [IsAdmin]
+        else:
+            permission_classes = [AllowAny]
+        return [permission() for permission in permission_classes]
+
     def list(self, request, *args, **kwargs):
         self.serializer_class = SubCategoryListSerializer
         return super().list(request, *args)
@@ -68,6 +84,13 @@ class BrandAPIView(ModelViewSet):
     ordering_fields = ['created_at']
     lookup_field = 'guid'
 
+    def get_permissions(self):
+        if self.request.method in ['POST', 'PUT', 'PATCH', 'DELETE']:
+            permission_classes = [IsAdmin]
+        else:
+            permission_classes = [AllowAny]
+        return [permission() for permission in permission_classes]
+
 
 @extend_schema(tags=["Uom"])
 class UomAPIView(ModelViewSet):
@@ -78,6 +101,13 @@ class UomAPIView(ModelViewSet):
     ordering_fields = ['created_at']
     lookup_field = 'guid'
 
+    def get_permissions(self):
+        if self.request.method in ['POST', 'PUT', 'PATCH', 'DELETE']:
+            permission_classes = [IsAdmin]
+        else:
+            permission_classes = [AllowAny]
+        return [permission() for permission in permission_classes]
+
 
 @extend_schema(tags=["Address"])
 class AddressAPIView(ModelViewSet):
@@ -85,6 +115,7 @@ class AddressAPIView(ModelViewSet):
     serializer_class = AddressCreateSerializer
     pagination_class = CustomPagination
     filter_backends = [OrderingFilter]
+    permission_classes = [IsAuthenticated]
     ordering_fields = ['created_at']
     lookup_field = 'guid'
 
@@ -93,4 +124,28 @@ class AddressAPIView(ModelViewSet):
         user = self.request.query_params.get('user')
         if user:
             queryset = queryset.filter(user=user)
+        return queryset
+
+
+@extend_schema(tags=["Corner Status"])
+class CornerStatusAPIView(ModelViewSet):
+    queryset = CornerStatus.objects.all()
+    serializer_class = CornerStatusCreateSerializer
+    pagination_class = CustomPagination
+    filter_backends = [OrderingFilter]
+    ordering_fields = ['created_at']
+    lookup_field = 'guid'
+
+    def get_permissions(self):
+        if self.request.method in ['POST', 'PUT', 'PATCH', 'DELETE']:
+            permission_classes = [IsAdmin]
+        else:
+            permission_classes = [AllowAny]
+        return [permission() for permission in permission_classes]
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        q = self.request.query_params.get('q')
+        if q:
+            queryset = queryset.filter(title__icontains=q)
         return queryset
