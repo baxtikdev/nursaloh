@@ -158,7 +158,7 @@ sentry_sdk.init(
 # -------------------------------------------------------------------------------
 # Tools that generate code samples can use SERVERS to point to the correct domain
 SPECTACULAR_SETTINGS["SERVERS"] = [  # noqa: F405
-    {"url": "http://ecommerce.doppidev.uz", "description": "Production server"},
+    {"url": "http://api.nursaloh.uz", "description": "Production server"},
 ]
 # Your stuff...
 # ------------------------------------------------------------------------------
